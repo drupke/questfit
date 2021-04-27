@@ -36,9 +36,10 @@
 ;      2015nov20, DSNR, copied from readcf.pro; changed path specification
 ;      2016aug24, DSNR, changed NUMLINES call to FILE_LINES; small change to
 ;                       error message
+;      2021apr27, DSNR, changed fltarr --> dblarr
 ;    
 ; :Copyright:
-;    Copyright (C) 2015 Mario Schweitzer, Vincent Viola, David S. N. Rupke
+;    Copyright (C) 2015--2021 Mario Schweitzer, Vincent Viola, David S. N. Rupke
 ;
 ;    This program is free software: you can redistribute it and/or
 ;    modify it under the terms of the GNU General Public License as
@@ -111,54 +112,54 @@ readcol,pathin+controlfile,f='A,A,F,F,A,F,F,A,F,F',dtype,dname,norm,fixfree,$
 
   templatefiles=strarr(numberoftemplates)                     ;creates an array containing the number of template files
   templatefilesb=strarr(numberoftemplates)                    ;and then creates arrays for the normalization, fix free values,
-  normtemp=fltarr(numberoftemplates)                          ;etc. based on the number of template files
-  fixfreetemp=fltarr(numberoftemplates)
+  normtemp=dblarr(numberoftemplates)                          ;etc. based on the number of template files
+  fixfreetemp=dblarr(numberoftemplates)
   extcurvetemp=strarr(numberoftemplates)
-  extvaluetemp=fltarr(numberoftemplates)
-  extvaluefixfreetemp=fltarr(numberoftemplates)
-  sizetemp=fltarr(numberoftemplates)
+  extvaluetemp=dblarr(numberoftemplates)
+  extvaluefixfreetemp=dblarr(numberoftemplates)
+  sizetemp=dblarr(numberoftemplates)
   screenmixedtemplate=strarr(numberoftemplates)
-  taupeaktemp=fltarr(numberoftemplates,numberofabs)
-  taupeaktempfixfree=fltarr(numberoftemplates,numberofabs)
-  numberofabstemp=fltarr(numberoftemplates)
-  absorbtempwave=fltarr(numberoftemplates,numberofabs,1.e4)
-  absorbtemptau=fltarr(numberoftemplates,numberofabs,1.e4) 
-  abstempsize=fltarr(numberoftemplates,numberofabs)
+  taupeaktemp=dblarr(numberoftemplates,numberofabs)
+  taupeaktempfixfree=dblarr(numberoftemplates,numberofabs)
+  numberofabstemp=dblarr(numberoftemplates)
+  absorbtempwave=dblarr(numberoftemplates,numberofabs,1.e4)
+  absorbtemptau=dblarr(numberoftemplates,numberofabs,1.e4) 
+  abstempsize=dblarr(numberoftemplates,numberofabs)
   
 
   blackbody=strarr(numberofBB)                     ;repeat last comment block for blackbodies
-  normbb=fltarr(numberofBB)                        
-  fixfreebb=fltarr(numberofBB)
-  fixfreebbtemp=fltarr(numberofBB)
+  normbb=dblarr(numberofBB)                        
+  fixfreebb=dblarr(numberofBB)
+  fixfreebbtemp=dblarr(numberofBB)
   extcurvebb=strarr(numberofBB)
-  extvaluebb=fltarr(numberofBB)
-  extvaluefixfreebb=fltarr(numberofBB)
-  tempbb=fltarr(numberofBB)
+  extvaluebb=dblarr(numberofBB)
+  extvaluefixfreebb=dblarr(numberofBB)
+  tempbb=dblarr(numberofBB)
   screenmixedBB=strarr(numberofBB)
-  taupeakBB=fltarr(numberofBB,numberofabs)
-  taupeakBBfixfree=fltarr(numberofBB,numberofabs)
-  numberofabsBB=fltarr(numberofBB)
-  absorbBBwave=fltarr(numberofBB,numberofabs,1.e4) ; maximum 1.e4 wavelengthticks for absfeatures !
-  absorbBBtau=fltarr(numberofBB,numberofabs,1.e4) 
-  absbbsize=fltarr(numberofBB,numberofabs) 
+  taupeakBB=dblarr(numberofBB,numberofabs)
+  taupeakBBfixfree=dblarr(numberofBB,numberofabs)
+  numberofabsBB=dblarr(numberofBB)
+  absorbBBwave=dblarr(numberofBB,numberofabs,1.e4) ; maximum 1.e4 wavelengthticks for absfeatures !
+  absorbBBtau=dblarr(numberofBB,numberofabs,1.e4) 
+  absbbsize=dblarr(numberofBB,numberofabs) 
 
   if numberofpl gt 0 then begin 
     powerlaw=strarr(numberofpl)                        ;repeat last comment block for powerlaws
-    normpl=fltarr(numberofpl)
-    fixfreepl=fltarr(numberofpl)
-    fixfreeplindex=fltarr(numberofpl)
+    normpl=dblarr(numberofpl)
+    fixfreepl=dblarr(numberofpl)
+    fixfreeplindex=dblarr(numberofpl)
     extcurvepl=strarr(numberofpl)
-    extvaluepl=fltarr(numberofpl)
-    extvaluefixfreepl=fltarr(numberofpl)
-    indexpl=fltarr(numberofpl)
+    extvaluepl=dblarr(numberofpl)
+    extvaluefixfreepl=dblarr(numberofpl)
+    indexpl=dblarr(numberofpl)
     screenmixedpl=strarr(numberofpl)
     screenmixedpl=strarr(numberofpl)
-    taupeakpl=fltarr(numberofpl,numberofabs)
-    taupeakplfixfree=fltarr(numberofpl,numberofabs)
-    numberofabspl=fltarr(numberofpl)
-    absorbplwave=fltarr(numberofpl,numberofabs,1.e4)
-    absorbpltau=fltarr(numberofpl,numberofabs,1.e4) 
-    absplsize=fltarr(numberofpl,numberofabs)
+    taupeakpl=dblarr(numberofpl,numberofabs)
+    taupeakplfixfree=dblarr(numberofpl,numberofabs)
+    numberofabspl=dblarr(numberofpl)
+    absorbplwave=dblarr(numberofpl,numberofabs,1.e4)
+    absorbpltau=dblarr(numberofpl,numberofabs,1.e4) 
+    absplsize=dblarr(numberofpl,numberofabs)
   endif else begin
     numberofabspl=0
   endelse
@@ -166,12 +167,12 @@ readcol,pathin+controlfile,f='A,A,F,F,A,F,F,A,F,F',dtype,dname,norm,fixfree,$
   extinctionfiles=strarr(numberofext)               ;creates an array for the extinction files and extinction synonyms
   extcurvesynonym=strarr(numberofext)
   extfiles=strarr(numberofext)
-  sizeext=fltarr(numberofext)
+  sizeext=dblarr(numberofext)
 
   absorptionfiles=strarr(numberofabs)              ;same for absorption files
   absorpsynonym=strarr(numberofabs)
   absfiles=strarr(numberofabs)
-  sizeabs=fltarr(numberofabs)
+  sizeabs=dblarr(numberofabs)
 
   counta=0 ;count of absorption component
   countb=0 ;count of BB
@@ -322,9 +323,9 @@ readcol,pathin+controlfile,f='A,A,F,F,A,F,F,A,F,F',dtype,dname,norm,fixfree,$
       endif
   endfor
 
-  templatewave=fltarr(50,maxwavelengthticks)*!values.F_NaN ;asuming not more then 50 templates
-  templateflux=fltarr(50,maxwavelengthticks)*!values.F_NaN ;initialize everything with NaNs
-  templatestdev=fltarr(50,maxwavelengthticks)*!values.F_NaN
+  templatewave=dblarr(50,maxwavelengthticks)*!values.F_NaN ;asuming not more then 50 templates
+  templateflux=dblarr(50,maxwavelengthticks)*!values.F_NaN ;initialize everything with NaNs
+  templatestdev=dblarr(50,maxwavelengthticks)*!values.F_NaN
   
   for i=0,numberoftemplates-1 do begin                        ;reads through each template and sets its wavelength
       restore,templatefiles(i)                                ;flux and deviation equal the appropriate values
@@ -361,8 +362,8 @@ readcol,pathin+controlfile,f='A,A,F,F,A,F,F,A,F,F',dtype,dname,norm,fixfree,$
       endif
   endfor
 
-  extwave=fltarr(50,maxwavelengthtickse)*!values.F_NaN ;asuming not more then 50 curves
-  extvalue=fltarr(50,maxwavelengthtickse)*!values.F_NaN ;initialize everything with NaNs
+  extwave=dblarr(50,maxwavelengthtickse)*!values.F_NaN ;asuming not more then 50 curves
+  extvalue=dblarr(50,maxwavelengthtickse)*!values.F_NaN ;initialize everything with NaNs
  
   for i=0,numberofext-1 do begin
       restore,extfiles(i)

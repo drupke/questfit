@@ -144,9 +144,10 @@
 ;                        floating overflow; fixed floating underflow in
 ;                        model function
 ;       2016oct25, DSNR, removed necessity of including power law
+;       2021apr27, DSNR, changed fltarr --> dblarr
 ;    
 ; :Copyright:
-;    Copyright (C) 2015--2016 Mario Schweitzer, Vincent Viola, David S. N. Rupke
+;    Copyright (C) 2015--2021 Mario Schweitzer, Vincent Viola, David S. N. Rupke
 ;
 ;    This program is free software: you can redistribute it and/or
 ;    modify it under the terms of the GNU General Public License as
@@ -185,7 +186,7 @@ common datacommon,lowerlimit,upperlimit,numberofBB,numberofpl,$
        numberofabstemp
  
 
-model=fltarr(max(numbin))
+model=dblarr(max(numbin))
 parametercount=0
 
 ;add BB
@@ -428,7 +429,7 @@ minsourcewave=min(sourcewave,/NaN)
 
 ;find smallest common wavelengthvalue in templates
 
-mintempwave=fltarr(numberoftemplates)
+mintempwave=dblarr(numberoftemplates)
 
 for i=0,numberoftemplates-1 do begin
 
@@ -440,7 +441,7 @@ mintemplatewave=max(mintempwave,/NaN)
 
 ;find smallest common wavelengthvalue in extinctioncurves
 
-minextwave=fltarr(numberofext)
+minextwave=dblarr(numberofext)
 
 for i=0,numberofext-1 do begin
 
@@ -466,7 +467,7 @@ for i=0,numberofbb-1 do begin
         absorbbbwavecopy (i,j,index)=1.e6
     endfor
 endfor
-minimuma=fltarr(1000,1000)
+minimuma=dblarr(1000,1000)
 for i=0,numberofbb-1 do begin
     for j=0,numberofabsbb(i)-1 do begin
         minimuma(i,j)=min(absorbbbwavecopy(i,j,*)) 
@@ -482,7 +483,7 @@ for i=0,numberoftemplates-1 do begin
     endfor
 endfor
 
-minimumb=fltarr(1000,1000)
+minimumb=dblarr(1000,1000)
 
 for i=0,numberoftemplates-1 do begin
     for j=0,numberofabstemp(i)-1 do begin
@@ -499,7 +500,7 @@ for i=0,numberofpl-1 do begin
     endfor
 endfor
 
-minimumc=fltarr(1000,1000)
+minimumc=dblarr(1000,1000)
 
 for i=0,numberofpl-1 do begin
     for j=0,numberofabspl(i)-1 do begin
@@ -542,7 +543,7 @@ maxsourcewave=max(sourcewave,/NaN)
 
 ;find largest common wavelengthvalue in templates
 
-maxtempwave=fltarr(numberoftemplates)
+maxtempwave=dblarr(numberoftemplates)
 
 for i=0,numberoftemplates-1 do begin
     
@@ -580,7 +581,7 @@ commonabsmax=min([maxabsorbBBtotal,maxabsorbtemptotal,maxabsorbpltotal])
 
 ;find largest common wavelengthvalue in extinctioncurves
 
-maxextwave=fltarr(numberofext)
+maxextwave=dblarr(numberofext)
 
 for i=0,numberofext-1 do begin
     
@@ -627,9 +628,9 @@ indsource=where (sourcewave ge lowerlimit and sourcewave le upperlimit)
 
 ;define output variables
 
-abstempoutbinwave=fltarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
-abstempoutbintau=fltarr(50,50,n_elements(sourcewave))
-abstempnumbin=fltarr(numberoftemplates,total(numberofabstemp))
+abstempoutbinwave=dblarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
+abstempoutbintau=dblarr(50,50,n_elements(sourcewave))
+abstempnumbin=dblarr(numberoftemplates,total(numberofabstemp))
 
 
 
@@ -639,9 +640,9 @@ for i =0,numberoftemplates-1 do begin
 
 ;define and reset variables
 
-        tpltwave=fltarr(abstempsize(i,ii))  ; creates an array for the purpose of inputting 
-        tpltvalue=fltarr(abstempsize(i,ii)) ; all data for absorption features into sap_rebin to be rebinned
-        tpltstdev=fltarr(abstempsize(i,ii)) ; just 0's
+        tpltwave=dblarr(abstempsize(i,ii))  ; creates an array for the purpose of inputting 
+        tpltvalue=dblarr(abstempsize(i,ii)) ; all data for absorption features into sap_rebin to be rebinned
+        tpltstdev=dblarr(abstempsize(i,ii)) ; just 0's
         
         tpltwave(*)=absorbtempwave(i,ii,0:abstempsize(i,ii)-1) ;conversion of 3d inputvalues to 1d array
         tpltvalue(*)=absorbtemptau(i,ii,0:abstempsize(i,ii)-1) ;because MPFit and sap_rebin only take 1d arrays
@@ -665,20 +666,18 @@ endfor
 ;repeat rebinning process for absorption
 ;define output variables
 
-absBBoutbinwave=fltarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
-absBBoutbintau=fltarr(50,50,n_elements(sourcewave))
-absBBnumbin=fltarr(numberofBB,total(numberofabsBB))
-
-
+absBBoutbinwave=dblarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
+absBBoutbintau=dblarr(50,50,n_elements(sourcewave))
+absBBnumbin=dblarr(numberofBB,total(numberofabsBB))
 
 for i =0,numberofBB-1 do begin
 
     for ii=0,numberofabsBB(i)-1 do begin
 
         ;define and reset variables
-        tpltwave=fltarr(absBBsize(i,ii))
-        tpltvalue=fltarr(absBBsize(i,ii))
-        tpltstdev=fltarr(absBBsize(i,ii)) ; just 0's
+        tpltwave=dblarr(absBBsize(i,ii))
+        tpltvalue=dblarr(absBBsize(i,ii))
+        tpltstdev=dblarr(absBBsize(i,ii)) ; just 0's
         
         tpltwave(*)=absorbbbwave(i,ii,0:absBBsize(i,ii)-1) ;conversion of 3d inputvalues to 1d array
         tpltvalue(*)=absorbbbtau(i,ii,0:absBBsize(i,ii)-1)
@@ -700,17 +699,17 @@ endfor
 ;define output variables
 
 if numberofpl gt 0 then begin
-  absploutbinwave=fltarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
-  absploutbintau=fltarr(50,50,n_elements(sourcewave))
-  absplnumbin=fltarr(numberofpl,total(numberofabspl))
+  absploutbinwave=dblarr(50,50,n_elements(sourcewave)) ;not more then 50 templates and 50 abs-features per template !
+  absploutbintau=dblarr(50,50,n_elements(sourcewave))
+  absplnumbin=dblarr(numberofpl,total(numberofabspl))
 
   for i =0,numberofpl-1 do begin
 
     for ii=0,numberofabspl(i)-1 do begin
       ;define and reset variables
-      tpltwave=fltarr(absplsize(i,ii))
-      tpltvalue=fltarr(absplsize(i,ii))
-      tpltstdev=fltarr(absplsize(i,ii)) ; just 0's
+      tpltwave=dblarr(absplsize(i,ii))
+      tpltvalue=dblarr(absplsize(i,ii))
+      tpltstdev=dblarr(absplsize(i,ii)) ; just 0's
     
       tpltwave(*)=absorbplwave(i,ii,0:absplsize(i,ii)-1) ;conversion of 3d inputvalues to 1d array
       tpltvalue(*)=absorbpltau(i,ii,0:absplsize(i,ii)-1)
@@ -733,15 +732,15 @@ endif
 ;same as previous rebinning
 ;define output variables
 
-extoutbinwave=fltarr(50,n_elements(sourcewave))
-extoutbinvalue=fltarr(50,n_elements(sourcewave))
-extnumbin=fltarr(numberofext)
+extoutbinwave=dblarr(50,n_elements(sourcewave))
+extoutbinvalue=dblarr(50,n_elements(sourcewave))
+extnumbin=dblarr(numberofext)
 
 for i=0,numberofext-1 do begin
     ;define and reset variables
-    tpltwave=fltarr(sizeext(i))
-    tpltvalue=fltarr(sizeext(i))
-    tpltstdev=fltarr(sizeext(i)); just 0's
+    tpltwave=dblarr(sizeext(i))
+    tpltvalue=dblarr(sizeext(i))
+    tpltstdev=dblarr(sizeext(i)); just 0's
     
     tpltwave(*)=extwave(i,0:sizeext(i)-1) ;conversion of 2d inputvalues to 1d array
     tpltvalue(*)=extvalue(i,0:sizeext(i)-1)
@@ -765,16 +764,16 @@ endfor
 ;same as previous rebinning
 ;define output variables
 
-outbinwave=fltarr(50,n_elements(sourcewave))
-outbinflux=fltarr(50,n_elements(sourcewave))
-outbinstdev=fltarr(50,n_elements(sourcewave))
-numbin=fltarr(numberoftemplates)
+outbinwave=dblarr(50,n_elements(sourcewave))
+outbinflux=dblarr(50,n_elements(sourcewave))
+outbinstdev=dblarr(50,n_elements(sourcewave))
+numbin=dblarr(numberoftemplates)
 
 for i=0,numberoftemplates-1 do begin
     ;define and reset variables
-    tpltwave=fltarr(sizetemp(i))
-    tpltflux=fltarr(sizetemp(i))
-    tpltstdev=fltarr(sizetemp(i)); just 0's
+    tpltwave=dblarr(sizetemp(i))
+    tpltflux=dblarr(sizetemp(i))
+    tpltstdev=dblarr(sizetemp(i)); just 0's
     
     tpltwave(*)=templatewave(i,0:sizetemp(i)-1) ;conversion of 2d inputvalues to 1d array
     tpltflux(*)=templateflux(i,0:sizetemp(i)-1)
@@ -804,8 +803,8 @@ endfor
 ;In english: remove all values outside of wavelength range
 ;index of wavelengthboundaries in template data
 
-indtemplate=fltarr(50,max(numbin))
-count=fltarr(50)
+indtemplate=dblarr(50,max(numbin))
+count=dblarr(50)
 
 
 for i=0,numberoftemplates-1 do begin
@@ -833,8 +832,8 @@ endfor
 
 ;index of wavelengthboundaries in extinctioncurves
 
-indextinction=fltarr(50,max(extnumbin))
-countext=fltarr(50)
+indextinction=dblarr(50,max(extnumbin))
+countext=dblarr(50)
 
 
 for i=0,numberofext-1 do begin
@@ -868,15 +867,15 @@ endfor
 ; 2 arrays are created below: one for the fixfree prameter for
 ; blackbodies, powerlaws and templates, and the other is the array for
 ; the start values of the black bodies, powerlaws and templates
-fixfreeblackbody=fltarr(3*numberofBB+total(numberofabsbb)) 
-if numberofpl gt 0 then fixfreepowerlaw=fltarr(3*numberofpl+total(numberofabspl))
-fixfreetemplates=fltarr(2*numberoftemplates+total(numberofabstemp))
+fixfreeblackbody=dblarr(3*numberofBB+total(numberofabsbb)) 
+if numberofpl gt 0 then fixfreepowerlaw=dblarr(3*numberofpl+total(numberofabspl))
+fixfreetemplates=dblarr(2*numberoftemplates+total(numberofabstemp))
 
-pstartBB=fltarr(3*numberofBB+total(numberofabsbb))
-if numberofpl gt 0 then pstartpl=fltarr(3*numberofpl+total(numberofabspl))
-pstarttemplates=fltarr(2*numberoftemplates+total(numberofabstemp))
+pstartBB=dblarr(3*numberofBB+total(numberofabsbb))
+if numberofpl gt 0 then pstartpl=dblarr(3*numberofpl+total(numberofabspl))
+pstarttemplates=dblarr(2*numberoftemplates+total(numberofabstemp))
 
-if numberofpl gt 0 then indexparametercount=fltarr(numberofpl) $
+if numberofpl gt 0 then indexparametercount=dblarr(numberofpl) $
 else indexparametercount=0
 
 ;BB 
@@ -1101,15 +1100,15 @@ P=result ; use fitresult for parameters
 ;-----------------------------------------
 ; creates arrays with the dimensions of a row per BB, PL or Temp by
 ; the number of elements in the wave array from the source file
-sum=fltarr(max(numbin))
-BBmem=fltarr(numberofBB,n_elements(sourcewave(indsource)))
-BBmemnorm=fltarr(numberofBB)
+sum=dblarr(max(numbin))
+BBmem=dblarr(numberofBB,n_elements(sourcewave(indsource)))
+BBmemnorm=dblarr(numberofBB)
 if numberofpl gt 0 then begin
-   PLmem=fltarr(numberofpl,n_elements(sourcewave(indsource)))
+   PLmem=dblarr(numberofpl,n_elements(sourcewave(indsource)))
    PLmemnorm=dblarr(numberofpl)
 endif
-Tempmem=fltarr(numberoftemplates,n_elements(sourcewave(indsource)))
-Tempmemnorm=fltarr(numberoftemplates)
+Tempmem=dblarr(numberoftemplates,n_elements(sourcewave(indsource)))
+Tempmemnorm=dblarr(numberoftemplates)
 
 for i=0,numberofBB-1 do begin
     
@@ -1394,25 +1393,25 @@ endif
 
 ;create arrays for normalization factors, indecies, extinction fits
 ;and tau fits for BBs, PLs and templates
-normBBfit=fltarr(numberofBB)
-temperatureBBfit=fltarr(numberofBB)
-extinctionBBfit=fltarr(numberofBB)
-tauBBfit=fltarr(numberofBB,max(numberofabsbb))
+normBBfit=dblarr(numberofBB)
+temperatureBBfit=dblarr(numberofBB)
+extinctionBBfit=dblarr(numberofBB)
+tauBBfit=dblarr(numberofBB,max(numberofabsbb))
 
 if numberofpl gt 0 then begin
-  normPLfit=fltarr(numberofpl)
-  indexPLfit=fltarr(numberofpl)
-  extinctionPLfit=fltarr(numberofpl)
-  tauPLfit=fltarr(numberofpl,max(numberofabspl))
+  normPLfit=dblarr(numberofpl)
+  indexPLfit=dblarr(numberofpl)
+  extinctionPLfit=dblarr(numberofpl)
+  tauPLfit=dblarr(numberofpl,max(numberofabspl))
 endif
 
-normtempfit=fltarr(numberoftemplates)
-extinctiontempfit=fltarr(numberoftemplates)
-tautempfit=fltarr(numberoftemplates,max(numberofabstemp))
+normtempfit=dblarr(numberoftemplates)
+extinctiontempfit=dblarr(numberoftemplates)
+tautempfit=dblarr(numberoftemplates,max(numberofabstemp))
 
-BBfittemps=fltarr(numberofBB)
-BBtauext=fltarr(numberofBB)
-BBtauabs=fltarr(numberofBB)
+BBfittemps=dblarr(numberofBB)
+BBtauext=dblarr(numberofBB)
+BBtauabs=dblarr(numberofBB)
 
 
 ;BB 
@@ -1633,8 +1632,8 @@ nu=double(cc/(sourcewave(indsource)*10.d^(-6.d)))
 ; + write the data to files
 ;------------------------------------------------------------------------------------------------------
 
-contribBB=fltarr(numberofBB,n_elements(sourcewave(indsource)))
-intBB=fltarr(numberofBB)
+contribBB=dblarr(numberofBB,n_elements(sourcewave(indsource)))
+intBB=dblarr(numberofBB)
 
 nuxx=nu
 sortnu=nu(sort(nuxx))
@@ -1699,8 +1698,8 @@ if keyword_set(contrib) then begin
       endfor
       
       
-      contribpl=fltarr(numberofpl,n_elements(sourcewave(indsource)))
-      if numberofpl gt 0 then intPL=fltarr(numberofPL) else intPL=0d
+      contribpl=dblarr(numberofpl,n_elements(sourcewave(indsource)))
+      if numberofpl gt 0 then intPL=dblarr(numberofPL) else intPL=0d
       
       for i=0,numberofpl-1 do begin
          
@@ -1736,8 +1735,8 @@ if keyword_set(contrib) then begin
          
       endfor
       
-      contribtemp=fltarr(numberoftemplates,n_elements(sourcewave(indsource)))
-      inttemp=fltarr(numberoftemplates)
+      contribtemp=dblarr(numberoftemplates,n_elements(sourcewave(indsource)))
+      inttemp=dblarr(numberoftemplates)
       
       for i=0,numberoftemplates-1 do begin
          
