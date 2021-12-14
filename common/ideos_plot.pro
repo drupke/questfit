@@ -42,25 +42,23 @@
 ;    http://www.gnu.org/licenses/.
 ;
 ;-
-pro ideos_plot
+pro ideos_plot,indir,outdir
 
-   rootdir='/Volumes/fingolfin/spitzer/ideos/'
-
-   readcol,rootdir+'docs/ideos_pahweq.txt',id,pah6,pah7,pah11,$
+   readcol,indir+'ideos_pahweq.txt',id,pah6,pah7,pah11,$
            /silent,skip=7,format='(A,X,X,X,X,D,D,D)'
-   readcol,rootdir+'docs/ideos_tau.txt',id,siltau,$
+   readcol,indir+'ideos_tau.txt',id,siltau,$
            /silent,skip=5,format='(A,X,D)'
 
-   cgps_open,rootdir+'plots/ideos_pah6_v_siltau.eps',charsize=1,/encap,$
-             /inches,xs=7.5,ys=7.5,/qui
+   cgps_open,outdir+'ideos_pah6_v_siltau.eps',charsize=1,/encap,$
+             /inches,xs=7.5,ys=7.5,/qui,/nomatch
    cgplot,[0],/xsty,/ysty,yran=[-0.6,1.3],xran=[-4,1]
    cgoplot,pah6,alog10(siltau),psym=16
    cgps_close
 
    xtit='log[ EW(7.7$\mu$m PAH) / $\mu$m]'
    ytit='$\tau$$\down9.7$$\upeffective$'
-   cgps_open,rootdir+'plots/ideos_pah7_v_siltau.eps',charsize=1.1,/encap,$
-             /inches,xs=7.5,ys=7.5,/qui
+   cgps_open,outdir+'ideos_pah7_v_siltau.eps',charsize=1.1,/encap,$
+             /inches,xs=7.5,ys=7.5,/qui,/nomatch
    cgplot,[0],/xsty,/ysty,yran=[-0.99,13.99],xran=[-1.99,1.5],xtit=xtit,$
           ytit=ytit
    cgoplot,pah7,siltau,psym=16

@@ -46,9 +46,10 @@
 ;      2015dec01, DSNR, added printing of best fit and sorting by ID;
 ;                       uses READCOL instead of READ_CSVCOL
 ;      2016oct25, DSNR, added logic for case of 4 BB components
+;      2021dec08, DSNR, fixed treatment of IDs with leading zeros
 ;    
 ; :Copyright:
-;    Copyright (C) 2015--2016 Vincent Viola, David S. N. Rupke
+;    Copyright (C) 2015--2021 Vincent Viola, David S. N. Rupke
 ;
 ;    This program is free software: you can redistribute it and/or
 ;    modify it under the terms of the GNU General Public License as
@@ -71,11 +72,11 @@ pro ideos_bestfitpartab,idlist,outfile,savdir=savdir,skipline=skipline
 
 ;  Galaxy fit results table
    if not keyword_set(skipline) then skipline=0
-   readcol,idlist,idarr,clustarr,bestfit,format='(L,I,I)',skipline=skipline,$
+   readcol,idlist,idarr,clustarr,bestfit,format='(A,I,I)',skipline=skipline,$
            delim=',',/silent,nlines=num
 
 ;  Sort by IDEOS ID
-   isort_idarr = sort(idarr)
+   isort_idarr = sort(long(idarr))
    s_idarr = idarr[isort_idarr]
    s_clustarr = clustarr[isort_idarr]
    s_bestfit = bestfit[isort_idarr]
@@ -86,7 +87,7 @@ pro ideos_bestfitpartab,idlist,outfile,savdir=savdir,skipline=skipline
    igoodpah1=[dindgen(2)+16]
    igoodpah2=[dindgen(2)+19]
    for ind=0,num-1 do begin
-      label=string(s_idarr[ind],'_',s_clustarr[ind],format='(I0,A0,I0)')
+      label=string(s_idarr[ind],'_',s_clustarr[ind],format='(A0,A0,I0)')
       printf,lun,label,s_bestfit[ind],format='(A-15,I3,$)'
       restore,savdir+label+'.sav'
 ;     This bit of logic only works for numberofBB = 3 or 4

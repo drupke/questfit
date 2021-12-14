@@ -632,8 +632,6 @@ abstempoutbinwave=dblarr(50,50,n_elements(sourcewave)) ;not more then 50 templat
 abstempoutbintau=dblarr(50,50,n_elements(sourcewave))
 abstempnumbin=dblarr(numberoftemplates,total(numberofabstemp))
 
-
-
 for i =0,numberoftemplates-1 do begin
     
     for ii=0,numberofabstemp(i)-1 do begin
