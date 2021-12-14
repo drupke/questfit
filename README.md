@@ -57,228 +57,144 @@ IDL> questfit, control file='IRAS21219m1757_dlw_qst.cf',pathin='[path-to-questfi
 
 ## DETAILED USAGE
 
-Contents of "control file" (*.cf):
+The control file (*.cf) consists of 10 space-separated text columns of any width:
 
-A                          B           C     D      E           F    G    H     I    J
-source                 spectrum.xdr    -1   -1.   dummy         0.0   0.   X    0.0  0.0
-template                    si1.xdr    0.1   0.   DRAINE03      10.0  0.   S    0.0  0.0
-absorption                 tau1.xdr    1.0   0.   H2Oice6       0.0   0.   S    0.0  0.0
-blackbody                     BB       0.1   0.   DRAINE03      1.0   0.   S	100. 0.0
-absorption                 tau1.xdr    0.0   1.   H2Oice6       1.0   0.   S    0.0  0.0
-powerlaw                      PL       0.1   0.   DRAINE03      1.0   0.   S   -3.4  0.0
-absorption                 tau1.xdr    1.0   0.   H2Oice3       1.0   0.   S    0.0  0.0
-absorption                 tau2.xdr    1.0   0.   H2Oice6       1.0   0.   S    0.0  0.0
-extinction             draine03.xdr    0.0   0.   DRAINE03      0.0   0.   X    0.0  0.0
-(format is not sensitive to exact column width)
+| A          	| B            	| C   	| D   	| E        	| F    	| G  	| H 	| I    	| J   	|
+|------------	|--------------	|-----	|-----	|----------	|------	|----	|---	|------	|-----	|
+| source     	| spectrum.xdr 	| -1  	| -1. 	| dummy    	| 0.0  	| 0. 	| X 	| 0.0  	| 0.0 	|
+| template   	| si1.xdr      	| 0.1 	| 0.  	| DRAINE03 	| 10.0 	| 0. 	| S 	| 0.0  	| 0.0 	|
+| absorption 	| tau1.xdr     	| 1.0 	| 0.  	| H2Oice6  	| 0.0  	| 0. 	| S 	| 0.0  	| 0.0 	|
+| blackbody  	| BB           	| 0.1 	| 0.  	| DRAINE03 	| 1.0  	| 0. 	| S 	| 100. 	| 0.0 	|
+| absorption 	| tau1.xdr     	| 0.0 	| 1.  	| H2Oice6  	| 1.0  	| 0. 	| S 	| 0.0  	| 0.0 	|
+| powerlaw   	| PL           	| 0.1 	| 0.  	| DRAINE03 	| 1.0  	| 0. 	| S 	| -3.4 	| 0.0 	|
+| absorption 	| tau1.xdr     	| 1.0 	| 0.  	| H2Oice3  	| 1.0  	| 0. 	| S 	| 0.0  	| 0.0 	|
+| absorption 	| tau2.xdr     	| 1.0 	| 0.  	| H2Oice6  	| 1.0  	| 0. 	| S 	| 0.0  	| 0.0 	|
+| extinction 	| draine03.xdr 	| 0.0 	| 0.  	| DRAINE03 	| 0.0  	| 0. 	| X 	| 0.0  	| 0.0 	|
 
 Meaning of the columns:
 
-A : The type of data. Include at least one of each datatype
-    (template,BB,PL,absorption,extinction) You have to use for at
-    least one of each datatype (templates,BB,PL) an absorption (as in
-    the file above). And at least one extinction file has to be
-    given.
+- A
+  - The type of data. Include at least one of each datatype
+    (`template, BB, PL, absorption, extinction`). You have to use for
+    at least one of each datatype (`template, BB, PL`) an absorption
+    (as in the file above). And at least one extinction file has to be
+    given. If you want to use more then one absorption on a certain
+    datatype just add them up under the regarding datatype and they
+    will all work on the datatype above (like for the powerlaw in the
+    example above).
 
-    If you want to use more then one absorption on a certain datatype
-    just add them up under the regarding datatype and they will all
-    work on the datatype above (like for the powerlaw in the example
-    above).
+- B
+  - `source, template, absorption, extinction`: filename
+  - 'BB, PL`: any string
 
-B : in case of source,template,absorption,extinction put in the
-    filename.
-    in case of BB,PL use a string-dummy, which is just to aid
-    your memory and has no effect on program execution.
+- C
+  - `source`: lower wavelength limit. "-1" will use the lowest possible
+    common wavelength.
+  - `template, blackbody, powerlaw`: normalization factor
+  - `absorption`: tau_peak
+  - `extinction`: any float
 
-C : source : this is the lower wavelength limit
-            -1 will use the lowest possible common wavelength
-            The program will tell you if you use a too small value
+- D
+  - `source`: upper wavelength limit. "-1" will use the largest
+    possible common wavelength.
+  - `template, blackbody, powerlaw`: fix/free parameter for the
+    normalization. 1=fixed, 0=free 
+  - `absorption`:  fix/free parameter for tau_peak. 1=fixed, 0=free 
+  - `extinction`: any float
 
-   template,blackbody,powerlaw : This is the normalization factor
-   
-   absorption: This is the taupeak
+- E
+  - `source, absorption`: any string
+  - `template, blackbody, powerlaw`: shorthand for the extinction curve
+  - `extinction`: shorthand for the extinction curve is defined
+    and connected to the xdr.file
 
-   extinction: floatpoint dummy (not used)
-
-D : source : this is the upper wavelength limit
-            -1 will use the largest possible common wavelength
-  	    The program will tell you if you use a too large value
-
-   template,blackbody,powerlaw : This is the fixfree-parameter for the
-                                 norm-factor =1 fixed / =0 free while
-                                 fitting
+- F
+  - `source, extinction, absorption`: any float
+  - `template, blackbody, powerlaw`: extinction value (A_V)
  
-   absorption: This is the fixfree-parameter for the taupeak =1 fixed
-               / =0 free while fitting
+- G
+  - `source, extinction, absorption`: any float
+  - `template, bl, powerlaw`: fix/free parameter for A_V. 1=fixed,
+    0=free
 
-   extinction: floatpoint dummy (not used)
+- H
+  - `source, extinction, absorption`: any string
+  - `template, blackbody, powerlaw`: S=screen extinction, M=mixed extinction
 
-E: source,absorption : string-dummy (not used)
+- I
+  - `source, template, absorption, extinction`: any float
+  - `blackbody`: temperature (in K)
+  - `powerlaw`: index
 
-   template,blackbody,powerlaw : This is the synonym for the used
-   			         extinction curve
- 
-   extinction : here the synonym for the extinctioncurve is defined
-   	        and connected to the xdr.file
+- J
+  - `source, template, absorption, extinction`: any float
+  - `blackbody`: fix/free parameter for temperature. 1=fixed, 0=free
+  - `powerlaw`: fix/free parameter for powerlaw index. 1=fixed, 0=free
 
-F: source,extinction,absorption : floatpoint-dummy 
-   template,blackbody,powerlaw  : AV-value for extinction
- 
-G: source,extinction,absorption : floatingpoint-dummy
+To run:
 
-   template,blackbody,powerlaw  : fixfree-parameter for AV-value 
-
-H: source,extinction,absorption : string-dummy (not used)
-
-   template,blackbody,powerlaw : S=screen extinction, M=mixed extinction
-
-I: source,template,absorption,extinction : floatpoint-dummy (not used)
-
-   blackbody: This is the temperature in K
-
-   powerlaw : This is the powerlaw-index 
-
-J: source,template,absorption,extinction : floatpoint-dummy (not used)
-
-   blackbody: This is the fixfree-paramter for the temperature
-
-   powerlaw : This is the fixfree-paramter for the powerlaw-index 
-
-After the set up off your control file (saved for example as
-control.cf):
-
-IDL> tempfit,control file='control.cf'
+*IDL> tempfit,control file='control.cf'*
 
 The fit will start and produce a plot with the model spectra fitted to
 the source. In addition the contribution of each model depending on
 wavelength is plotted. This is not in multicolor. If you want to have
 a nicer view, create a eps file by typing :
 
-IDL> tempfit,control file='control.cf',ps=1
+*IDL> tempfit,control file='control.cf',ps=1*
 
 This creates an eps-file into the 'pathout' directory At the same time
 the fitoutput which appears in your shell (after the fit) will be
 written into a file if you use ps=1.
 
-The filename for the eps file will be :
-fit:sourcename.xdr_par:control file.cf.eps
+The filename for the eps file is *fit:sourcename.xdr_par:control
+file.cf.eps*.
 
-The filename for the data file will be :
-fitresult:sourcename.xdr_par:control file.cf.dat
+The filename for the data file is
+*fitresult:sourcename.xdr_par:control file.cf.dat*.
 
-In the eps plot each data type (template,BB,PL) has a common color.
-Within one type the spectra differ from each other by the linestyle.
+In the eps plot each data type (`template, BB, PL`) has a common
+color.  Within one type the spectra differ from each other by the
+linestyle.
 
 At the same time on the command shell at the end of the fit some
-information appears:
+information appears. The output is translated as follows:
 
-Iter    199   CHI-SQUARE =       165076.83          DOF = 290
-    P(0) =              0.00000
-    P(1) =              0.00000
-    P(2) =              223.071
-    P(3) =             0.128759
-    P(4) =              0.00000
-    P(5) =              0.00000
-    P(6) =          2.00909E-13
-    P(7) =              1.20905
-    P(8) =            0.0300259
-    P(9) =              508.749
-    P(10) =              44.9747
-    P(11) =              27.2432
-
-P(0):  BB :1 fitted extinction (Av):        0.0000000
-P(1):  BB :1 fitted taupeak:        0.0000000
-P(2):  BB :1 fitted temperature:        222.94748
-P(3):  BB :1 fitted normfactor: (/max)       0.12857978
-[P(3)]:  BB :1 fitted total normalization factor:   0.00194784
-
--------------------
-
-P(4):  PL :1 fitted extinction (Av):        0.0000000
-P(5):  PL :1 fitted taupeak:        0.0000000
-P(6):  PL :1 fitted taupeak:    2.0090873e-13
-P(7):  PL :1 fitted powerlaw-index:        1.1869074
-P(8):  PL :1 fitted normfactor: (/max)      0.030032732
-[P(8)]:  PL :1 fitted total normalization factor:   2.1419353e-18
-
--------------------
-
-P(9):  template :1 fitted extinction (Av):        508.87861
-P(10):  template :1 fitted taupeak:        44.992630
-P(11):  template :1 fitted normfactor: (/max)        27.253750
-[P(11)]:  template :1 fitted total normalization factor:  1.99867e-09
-
--------------------
-
-integral [W/cm^2] for source:   2.8561847e-18
-integral [W/cm^2] of BB no.:       1 :   2.2627287e-18
-contribution [%] to integrated sourceflux :       79.222072
-integral [W/cm^2] of PL no.:       1 :   5.3385511e-19
-contribution [%] to integrated sourceflux :       18.691197
-integral [W/cm^2] of template no.:       1 :   9.6453444e-20
-contribution [%] to integrated sourceflux :       3.3770030
-Sum of all contributions [%] relative to int. sourceflux :       101.29027
-
-
-- Above you see all the parameters after the fit.
-
-- The first parameter P(X) is the program internal definition for the
-  fitting parameter.
-
+- Each value P(X) is the program internal definition for the fitting
+  parameter.
 - The numbers of the contributors describe the order of appearance in
   the control file.
+- `norm factor` is total normalization factor/local maximum.  This is
+  the factor you have to put fixed into the control file if you like
+  the result. Be careful if you fix the parameters and you change the
+  wavelength range, as the norm factor depends on the maximum found in
+  the wavlength range.
+- `total normalization factor` is the value which you have to multiply
+  to the original template to get the fitted result.
+- `integral [W/cm^2] of XX` is the flux integrated over frequency.
 
-- norm factor : =total normalization factor/local maximum.  This is
-                the factor you have to put fixed into the control file
-                if you like the result. Be careful if you fix the
-                parameters and you change the wavelength range.
+- `contribution [%] to integrated source flux` is the contribution to
+  the integrated flux of each contributor
 
-- total normalization factor: this is the value which you have to
-                              multiply to the original template to get
-                              the fitted result.
-
-- integral [W/cm^2] for XX: shows the flux integrated over
-  	   	    	    frequency-axis
-
-
-- contribution [%] to integrated source flux : shows the contribution
-                                               of the integrated flux
-                                               for each contributor
-
-- Sum of all contributions [%] relative to int. sourceflux : adds up
-                                                             all
-                                                             contributions,
-                                                             should be
-                                                             100% in
-                                                             the case
-                                                             of a
-                                                             perfect
-                                                             fit.
-
+- `Sum of all contributions [%] relative to int. sourceflux` adds up
+  all contributions; should be 100% in the case of a perfect fit.
 
 Additional options:
 
-IDL> tempfit,control file='control.cf',res=1 shows the residuum (Data/Model)
+- *IDL> tempfit,control file='control.cf',res=1*: shows the residual
+   (Data/Model)
 
-IDL> tempfit,control file='control.cf',log=1 uses log xy-axis
+- *IDL> tempfit,control file='control.cf',log=1*: uses log xy-axis
 
-IDL> tempfit,control file='control.cf',data=1 will produce output-data
-                                        files of each model with
-                                        norm-factors not equal to 0.
-                                        
-                                        The filenames are for example:
-                                        sourcename.xdr_par:controlfile.cf_template1.fit
-                                        or
-                                        sourcename.xdr_par:controlfile.cf_BB2.fit
-                                        or
-                                        sourcename.xdr_par:controlfile.cf_total.fit
-                                        (this is the sum spectrum)
-                                        
+- *IDL> tempfit,control file='control.cf',data=1* will produce
+  output-data files of each model with norm-factors not equal to
+  0. The content of this output file is wavelength in microns, flux in
+  Jy.The filenames are for example:
+  - *sourcename.xdr_par:controlfile.cf_template1.fit*
+  - *sourcename.xdr_par:controlfile.cf_BB2.fit*
+  - *sourcename.xdr_par:controlfile.cf_total.fit*
 
-content of output file : wavelength in µm , flux in Jy
-
-IDL> tempfit,controlfile='control.cf',ident=1 shows an identification index
-     					      for the spectra
-
+- *IDL> tempfit,controlfile='control.cf',ident=1*: shows an
+  identification index for the spectra
 
 ## QUESTIONS? BUGS? WANT TO MODIFY THE CODE?
 
