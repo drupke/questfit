@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/336397843.svg)](https://zenodo.org/badge/latestdoi/336397843)
+
 ## OVERVIEW
 
 This software package was originally used to fit the Spitzer
