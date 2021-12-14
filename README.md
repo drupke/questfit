@@ -57,6 +57,10 @@ IDL> questfit, control file='IRAS21219m1757_dlw_qst.cf',pathin='[path-to-questfi
 
 ## DETAILED USAGE
 
+`questfit` and `ideos_readcf` are used to peform the spectral
+fitting. The other `ideos_*` routines are for collating the PAH fluxes
+for input to the IDEOS database.
+
 The control file (*.cf) consists of 10 space-separated text columns of any width:
 
 | A          	| B            	| C   	| D   	| E        	| F    	| G  	| H 	| I    	| J   	|
@@ -133,14 +137,14 @@ Meaning of the columns:
 
 To run:
 
-*IDL> tempfit,control file='control.cf'*
+*IDL> questfit,control file='control.cf'*
 
 The fit will start and produce a plot with the model spectra fitted to
 the source. In addition the contribution of each model depending on
 wavelength is plotted. This is not in multicolor. If you want to have
 a nicer view, create a eps file by typing :
 
-*IDL> tempfit,control file='control.cf',ps=1*
+*IDL> questfit,control file='control.cf',ps=1*
 
 This creates an eps-file into the 'pathout' directory At the same time
 the fitoutput which appears in your shell (after the fit) will be
@@ -180,12 +184,12 @@ information appears. The output is translated as follows:
 
 Additional options:
 
-- *IDL> tempfit,control file='control.cf',res=1*: shows the residual
+- *IDL> questfit,control file='control.cf',res=1*: shows the residual
    (Data/Model)
 
-- *IDL> tempfit,control file='control.cf',log=1*: uses log xy-axis
+- *IDL> questfit,control file='control.cf',log=1*: uses log xy-axis
 
-- *IDL> tempfit,control file='control.cf',data=1* will produce
+- *IDL> questfit,control file='control.cf',data=1* will produce
   output-data files of each model with norm-factors not equal to
   0. The content of this output file is wavelength in microns, flux in
   Jy.The filenames are for example:
@@ -193,7 +197,7 @@ Additional options:
   - *sourcename.xdr_par:controlfile.cf_BB2.fit*
   - *sourcename.xdr_par:controlfile.cf_total.fit*
 
-- *IDL> tempfit,controlfile='control.cf',ident=1*: shows an
+- *IDL> questfit,controlfile='control.cf',ident=1*: shows an
   identification index for the spectra
 
 ## QUESTIONS? BUGS? WANT TO MODIFY THE CODE?
